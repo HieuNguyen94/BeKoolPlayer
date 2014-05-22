@@ -182,7 +182,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="Album name display here"
             android:textColor="#04cbde"
             android:textSize="25px" >
         </TextView>
@@ -192,7 +191,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="Artist name display here"
             android:textColor="#04cbde"
             android:textSize="25px" >
         </TextView>

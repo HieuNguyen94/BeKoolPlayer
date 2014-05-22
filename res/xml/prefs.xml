@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="songDetails"
+        android:summary="Check this box to enable showing song details"
+        android:title="Song details" />
+
+    <ListPreference
+        android:entries="@array/list"
+        android:entryValues="@array/lValues"
+        android:key="musicPreset"
+        android:summary="Choose your favorate music style"
+        android:title="Music Presets" >
+    </ListPreference>
+
+</PreferenceScreen>

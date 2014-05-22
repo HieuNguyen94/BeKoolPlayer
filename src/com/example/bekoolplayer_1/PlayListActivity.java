@@ -41,16 +41,6 @@ public class PlayListActivity extends ListActivity implements OnItemClickListene
 			songsListData.add(song);
 		}
 		
-		
-		/*HashMap<String, String> song1 = new HashMap<String, String>();
-		song1.put("songTitle", "Cho ngay mua tan");
-		song1.put("songPaht", "disk1");
-		songsListData.add(song1);
-		HashMap<String, String> song2 = new HashMap<String, String>();
-		song2.put("songTitle", "Yeu dau theo gio bay");
-		song2.put("songPaht", "disk2");
-		songsListData.add(song2);
-		*/
 		// Adding menuItems to ListView
 		ListAdapter adapter = new SimpleAdapter(this, songsListData, R.layout.playlist_item, new String[] {"songTitle"}, new int[] {R.id.songTitle});
 		

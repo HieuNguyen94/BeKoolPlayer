@@ -64,4 +64,5 @@ public class Utilities {
 		// Return current duration in milliseconds
 		return currentDuration * 1000;
 	}
+	
 }

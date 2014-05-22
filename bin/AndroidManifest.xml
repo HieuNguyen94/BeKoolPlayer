@@ -26,11 +26,21 @@
         <activity
             android:name=".AboutUs"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Dialog"
             android:label="BeKool Player 2014"
-             >
+            android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <action android:name="android.intent.action.ABOUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Prefs"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="BeKool Player 2014"
+            android:theme="@android:style/Theme.Dialog" >
+            <intent-filter>
+                <action android:name="android.intent.action.PREFS" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

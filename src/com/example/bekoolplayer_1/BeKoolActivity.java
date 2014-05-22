@@ -8,10 +8,18 @@ import java.util.Random;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.audiofx.Equalizer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Menu;
@@ -27,6 +35,10 @@ import android.widget.Toast;
 
 public class BeKoolActivity extends Activity implements OnCompletionListener,
 		OnSeekBarChangeListener, OnClickListener {
+
+	SharedPreferences getPrefs;
+	Equalizer mEqualizer;
+	ListPreference lp;
 
 	// All variables here
 	private ImageButton bPlay;
@@ -52,11 +64,17 @@ public class BeKoolActivity extends Activity implements OnCompletionListener,
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
 	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
+	boolean showSongDetails = true;
+	String cache1, cache2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		getPrefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		getPrefs.registerOnSharedPreferenceChangeListener(prefListener);
 		initialize();
 	}
 
@@ -95,7 +113,25 @@ public class BeKoolActivity extends Activity implements OnCompletionListener,
 		// Getting all songs list
 		songsList = songManager.getPlayList();
 
+		mEqualizer = new Equalizer(0, mp.getAudioSessionId());
+		mEqualizer.setEnabled(true);
 	}
+
+	SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		public void onSharedPreferenceChanged(SharedPreferences prefs,
+				String key) {
+			String i = prefs.getString("musicPreset", "-1");
+			mEqualizer.usePreset(Short.parseShort(i));
+			showSongDetails = prefs.getBoolean("songDetails", true);
+			if (!showSongDetails){
+				tvArtistName.setText(null);
+				tvAlbumName.setText(null);
+			}else{
+				tvArtistName.setText(cache1);
+				tvAlbumName.setText(cache2);
+			}
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,7 +149,8 @@ public class BeKoolActivity extends Activity implements OnCompletionListener,
 			startActivity(aboutus);
 			break;
 		case R.id.preferences:
-
+			Intent p = new Intent("android.intent.action.PREFS");
+			startActivity(p);
 			break;
 		case R.id.exit:
 			finish();
@@ -346,26 +383,34 @@ public class BeKoolActivity extends Activity implements OnCompletionListener,
 			ivAlbumCover.setBackgroundResource(R.drawable.bkalbum);
 		}
 
-		// Get Artist Name
-		try {
-			tvAlbumName
-					.setText("Album: "
-							+ metaRetriver
-									.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
-		} catch (Exception e) {
-			tvAlbumName.setText("Album: " + "Unknown Album");
-		}
+		if (showSongDetails) {
+			// Get Artist Name
+			try {
+				cache1 = metaRetriver
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+				tvAlbumName
+						.setText("Album: "
+								+ cache1);
+			} catch (Exception e) {
+				tvAlbumName.setText("Album: " + "Unknown Album");
+			}
 
-		// Get Album Name
-		try {
-			tvArtistName
-					.setText("Artist: "
-							+ metaRetriver
-									.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-		} catch (Exception e) {
-			tvArtistName.setText("Artist: " + "Unknown Artist");
+			// Get Album Name
+			try {
+				cache2 = metaRetriver
+						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+				tvArtistName
+						.setText("Artist: "
+								+ cache2);
+			} catch (Exception e) {
+				tvArtistName.setText("Artist: " + "Unknown Artist");
+			}
 		}
-
+		else{
+			tvArtistName.setText(null);
+			tvAlbumName.setText(null);
+		}
+			
 	}
 
 	private void updateProgressBar() {
